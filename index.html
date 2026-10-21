@@ -1,0 +1,378 @@
+<!doctype html><html lang="es"><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>FITZ ROY NEWS</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: diario de una sola columna ancha; cabezal con la silueta del Fitz Roy, nav fija por sección, grilla de notas por sección (nota principal + secundarias + breves) */
+:root{
+  --ink:#040706;
+  --panel:#0b1211;
+  --panel-2:#101a18;
+  --line:#1d2b28;
+  --aqua:#2bffd6;
+  --aqua-dim:#17b394;
+  --text:#e6f1ee;
+  --muted:#8ea29d;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--ink);color:var(--text);font-family:var(--body);font-size:17px;line-height:1.6;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--ink)}
+a{color:var(--aqua)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--aqua);outline-offset:3px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Cabezal */
+.mast{padding-block:28px 18px;border-bottom:1px solid var(--line)}
+.mast-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mast-top b{color:var(--aqua);font-weight:500}
+.ridge{display:block;width:100%;height:auto;margin-top:18px;max-width:100%}
+.name{font-family:var(--display);font-weight:900;text-transform:uppercase;line-height:.82;letter-spacing:-.01em;font-size:clamp(64px,15vw,190px);margin:-6px 0 0;color:var(--text);text-wrap:balance}
+.name span{color:var(--aqua)}
+.tag{font-family:var(--body);font-style:italic;color:var(--muted);margin:14px 0 0;font-size:18px}
+
+/* Nav */
+nav.sections{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ink);border-bottom:1px solid var(--line)}
+nav.sections .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+nav.sections a{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:19px;letter-spacing:.04em;color:var(--text);text-decoration:none;padding:12px 14px;white-space:nowrap;border-bottom:3px solid transparent}
+nav.sections a:hover,nav.sections a.on{color:var(--aqua);border-bottom-color:var(--aqua)}
+
+/* Indicadores */
+.ticker{border-bottom:1px solid var(--line);background:var(--panel)}
+.ticker .wrap{display:flex;gap:28px;overflow-x:auto;padding-block:10px;font-family:var(--mono);font-size:13px;scrollbar-width:none}
+.tk{white-space:nowrap;color:var(--muted)}
+.tk strong{color:var(--aqua);font-weight:500;font-variant-numeric:tabular-nums;margin-left:6px}
+
+/* Filtro por periodista */
+.filter{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-block:22px 6px}
+.filter .lbl{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:6px}
+.chip{font-family:var(--mono);font-size:13px;background:transparent;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
+.chip:hover{border-color:var(--aqua-dim)}
+.chip[aria-pressed="true"]{background:var(--aqua);color:var(--ink);border-color:var(--aqua)}
+
+/* Secciones */
+section.sec{padding-block:34px 10px;scroll-margin-top:60px}
+.sec-head{display:flex;align-items:baseline;gap:16px;border-top:4px solid var(--aqua);padding-top:10px;margin-bottom:22px;flex-wrap:wrap}
+.sec-head h2{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:clamp(38px,6vw,60px);line-height:1;margin:0;letter-spacing:.01em}
+.sec-head p{margin:0;color:var(--muted);font-family:var(--mono);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:28px}
+.grid > *{min-width:0}
+.lead{grid-column:span 7}
+.side{grid-column:span 5;display:grid;gap:28px;align-content:start}
+.rest{grid-column:span 12;display:grid;grid-template-columns:repeat(2,1fr);gap:28px}
+@media (max-width:860px){.lead,.side{grid-column:span 12}.rest{grid-template-columns:1fr}}
+
+/* Nota */
+article{border-top:1px solid var(--line);padding-top:16px}
+article.big{border-top:none;padding-top:0}
+.kick{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--aqua);margin:0 0 8px}
+article h3{font-family:var(--display);font-weight:800;font-size:28px;line-height:1.02;margin:0 0 10px;text-wrap:balance;letter-spacing:.005em}
+article.big h3{font-size:clamp(36px,5vw,54px)}
+.lede{margin:0 0 14px;color:var(--text)}
+article.big .lede{font-size:20px;line-height:1.5}
+.by{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:15px;background:var(--panel-2);border:1px solid var(--aqua-dim);color:var(--aqua);flex:none}
+.by .who{font-family:var(--mono);font-size:13px;line-height:1.3}
+.by .who span{display:block;color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+details summary{cursor:pointer;font-family:var(--mono);font-size:13px;color:var(--aqua);list-style:none;display:inline-flex;gap:6px;align-items:center}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"+";font-weight:500}
+details[open] summary::before{content:"−"}
+details[open] summary{margin-bottom:12px}
+.body p{margin:0 0 14px;max-width:65ch}
+.src{font-family:var(--mono);font-size:12px;color:var(--muted);border-top:1px dashed var(--line);padding-top:10px;margin-top:6px}
+.src a{color:var(--muted);text-underline-offset:3px}
+.src a:hover{color:var(--aqua)}
+
+/* Breves */
+.briefs{grid-column:span 12;background:var(--panel);border:1px solid var(--line);padding:20px 22px}
+.briefs h4{font-family:var(--display);text-transform:uppercase;font-weight:800;font-size:22px;margin:0 0 12px;color:var(--aqua);letter-spacing:.04em}
+.briefs ul{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.briefs li{font-size:15px;line-height:1.5;min-width:0}
+.briefs li a{font-family:var(--mono);font-size:11px;color:var(--muted)}
+@media (max-width:860px){.briefs ul{grid-template-columns:1fr}}
+
+/* Redacción */
+.staff{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.staff > div{background:var(--panel);border:1px solid var(--line);padding:22px;min-width:0}
+.staff .big-av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:900;font-size:28px;background:var(--ink);border:2px solid var(--aqua);color:var(--aqua);margin-bottom:14px}
+.staff h3{font-family:var(--display);font-weight:800;font-size:30px;text-transform:uppercase;margin:0;line-height:1}
+.staff .role{font-family:var(--mono);font-size:12px;color:var(--aqua);text-transform:uppercase;letter-spacing:.08em;margin:6px 0 12px}
+.staff p{margin:0 0 10px;font-size:16px}
+.staff blockquote{margin:12px 0 0;padding-left:12px;border-left:2px solid var(--aqua-dim);font-style:italic;color:var(--muted);font-size:15px}
+@media (max-width:860px){.staff{grid-template-columns:1fr}}
+
+footer{border-top:1px solid var(--line);margin-top:40px;padding-block:26px 40px;color:var(--muted);font-family:var(--mono);font-size:12px;line-height:1.7}
+footer .fn{font-family:var(--display);font-weight:900;font-size:26px;color:var(--text);text-transform:uppercase}
+footer .fn span{color:var(--aqua)}
+.empty{grid-column:span 12;color:var(--muted);font-style:italic}
+@media (prefers-reduced-motion:no-preference){.ridge path.line{stroke-dasharray:1400;stroke-dashoffset:0;animation:draw 2.2s ease-out}
+@keyframes draw{from{stroke-dashoffset:1400}to{stroke-dashoffset:0}}}
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="mast-top">
+      <div>Mendoza · <b>Miércoles 21 de octubre de 2026</b></div>
+      <div>Edición digital · Política nacional, provincial y municipal</div>
+    </div>
+    <svg class="ridge" viewBox="0 0 1200 120" aria-hidden="true" preserveAspectRatio="none">
+      <path class="line" d="M0 112 L120 104 L210 92 L270 98 L330 74 L380 82 L430 52 L462 60 L500 30 L522 40 L548 8 L566 22 L590 14 L612 44 L640 36 L676 66 L720 58 L770 84 L830 76 L900 96 L980 90 L1060 104 L1200 110" fill="none" stroke="#2bffd6" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M548 8 L566 22 L590 14 L612 44 L640 36 L676 66 L720 58 L770 84 L830 76 L900 96 L980 90 L1060 104 L1200 110 L1200 120 L0 120 L0 112 L120 104 L210 92 L270 98 L330 74 L380 82 L430 52 L462 60 L500 30 L522 40 Z" fill="#2bffd6" fill-opacity=".07"/>
+    </svg>
+    <h1 class="name">Fitz Roy <span>News</span></h1>
+    <p class="tag">La política de Mendoza y del país, contada por tres voces.</p>
+  </div>
+</header>
+
+<nav class="sections" aria-label="Secciones">
+  <div class="wrap">
+    <a href="#nacionales" data-sec="nacionales">Nacionales</a>
+    <a href="#provinciales" data-sec="provinciales">Provinciales</a>
+    <a href="#municipales" data-sec="municipales">Municipales</a>
+    <a href="#redaccion" data-sec="redaccion">La redacción</a>
+  </div>
+</nav>
+
+<div class="ticker" aria-label="Indicadores">
+  <div class="wrap">
+    <div class="tk">Dólar BNA (20/10)<strong>$1.545</strong></div>
+    <div class="tk">Dólar blue (20/10)<strong>$1.570</strong></div>
+    <div class="tk">Mayorista (20/10)<strong>$1.525</strong></div>
+    <div class="tk">Riesgo país, cierre 20/10<strong>672 pb</strong></div>
+    <div class="tk">Reservas brutas BCRA<strong>US$50.201 M</strong></div>
+    <div class="tk">Licitación residuos Las Heras<strong>$288.000 M</strong></div>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="filter" role="group" aria-label="Filtrar por periodista">
+    <span class="lbl">Leer a</span>
+    <button class="chip" id="f-all" data-f="all" aria-pressed="true">Toda la redacción</button>
+    <button class="chip" id="f-bd" data-f="bd" aria-pressed="false">Bárbara Newkoski</button>
+    <button class="chip" id="f-mk" data-f="mk" aria-pressed="false">Augusto Fitz</button>
+    <button class="chip" id="f-lr" data-f="lr" aria-pressed="false">Lautaro Roy</button>
+  </div>
+
+  <section class="sec" id="nacionales">
+    <div class="sec-head"><h2>Nacionales</h2><p>Casa Rosada, Congreso, tribunales y economía</p></div>
+    <div class="grid" data-grid="nacionales"></div>
+  </section>
+
+  <section class="sec" id="provinciales">
+    <div class="sec-head"><h2>Provinciales</h2><p>Casa de Gobierno, Legislatura y la Mendoza que viene</p></div>
+    <div class="grid" data-grid="provinciales"></div>
+  </section>
+
+  <section class="sec" id="municipales">
+    <div class="sec-head"><h2>Municipales</h2><p>Capital, Godoy Cruz, Guaymallén, Las Heras, Maipú y los 18 departamentos</p></div>
+    <div class="grid" data-grid="municipales"></div>
+  </section>
+
+  <section class="sec" id="redaccion">
+    <div class="sec-head"><h2>La redacción</h2><p>Tres periodistas, tres maneras de contar</p></div>
+    <div class="staff">
+      <div>
+        <div class="big-av">BN</div>
+        <h3>Bárbara Newkoski</h3>
+        <div class="role">Cercanía · 40 años</div>
+        <p>Cuenta la política como se la contaría a una vecina en la vereda: sin vueltas, con calidez y siempre preguntando qué cambia en la vida de cada uno.</p>
+        <p>Cubre servicios, bolsillo, agua, clima y todo lo que pasa en el barrio.</p>
+        <blockquote>"Si no se entiende, no sirve. Y si no te toca a vos, te voy a explicar a quién sí."</blockquote>
+      </div>
+      <div>
+        <div class="big-av">AF</div>
+        <h3>Augusto Fitz</h3>
+        <div class="role">Análisis · 60 años</div>
+        <p>Economista de formación, lector de estadísticas y sociología, con décadas siguiendo el mundo de los negocios. Busca la lógica detrás de cada decisión y el número detrás de cada discurso.</p>
+        <p>Cubre economía política, finanzas públicas, energía, minería e inversiones.</p>
+        <blockquote>"Los anuncios pasan. Las cuentas fiscales quedan."</blockquote>
+      </div>
+      <div>
+        <div class="big-av">LR</div>
+        <h3>Lautaro Roy</h3>
+        <div class="role">Sin filtro · 24 años</div>
+        <p>Escribe como habla su generación. Le interesan la universidad, el laburo, las redes y quién se está posicionando para 2027.</p>
+        <p>Cubre roscas electorales, juventud, educación y protesta.</p>
+        <blockquote>"La política también es nuestra. Te la cuento en criollo y sin humo."</blockquote>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fn">Fitz Roy <span>News</span></div>
+    <p>Mendoza, Argentina. Las notas de esta edición fueron redactadas por periodistas que son agentes de inteligencia artificial, a partir de las fuentes periodísticas citadas al pie de cada nota. Las proyecciones electorales reflejan lo que publicaron esos medios, no hechos confirmados.</p>
+  </div>
+</footer>
+
+<script>
+const AUTH={
+  bd:{n:"Bárbara Newkoski",i:"BN",t:"Cercanía"},
+  mk:{n:"Augusto Fitz",i:"AF",t:"Análisis"},
+  lr:{n:"Lautaro Roy",i:"LR",t:"Sin filtro"}
+};
+const S={
+  ibMerc:["Infobae","https://www.infobae.com/economia/2026/10/20/jornada-financiera-el-riesgo-pais-cerro-a-la-baja-tras-superar-los-700-puntos-y-el-dolar-subio-por-tercer-dia-consecutivo/"],
+  amb:["Ámbito","https://www.ambito.com/finanzas/dolar-blue-hoy-cuanto-cerro-este-martes-20-octubre-n6335942"],
+  ahora:["Ahora Info","https://ahorainfo.com.ar/2026/10/21/economia-tension-en-el-plan-economico/"],
+  ibSes:["Infobae","https://www.infobae.com/politica/2026/10/21/tierras-discapacidad-y-endeudamiento-el-oficialismo-busca-neutralizar-la-agenda-opositora-con-una-mega-sesion/"],
+  lpoRet:["La Política Online","https://www.lapoliticaonline.com/politica/sturzenegger-lanza-un-nuevo-plan-de-retiro-para-estatales-y-ate-denuncia-que-son-despidos-extorsivos/"],
+  ed:["El Destape","https://www.eldestapeweb.com/politica/javier-milei-medidas-gobierno-vivo-ultimas-noticias-21-octubre-minuto-minuto-2026102165326"],
+  ibMad:["Infobae","https://www.infobae.com/america/agencias/2026/10/21/milei-hace-campana-en-madrid-si-reelegimos-los-cuatro-anos-siguientes-seran-inolvidables/"],
+  esAy:["El Sol","https://www.elsol.com.ar/mendoza/humberto-mingorance-renuncio-en-aysam-quien-ocupara-su-lugar/"],
+  dmAy:["Diario Mendoza","https://www.diariomendoza.com.ar/sociedad/renuncio-humberto-mingorance-aysam-medio-una-catarata-criticas-su-gestion-n182403"],
+  mdzCal:["MDZ","https://www.mdzol.com/politica/2026/10/20/calvente-defiende-el-ajuste-y-le-pide-un-plan-especial-a-aysam-por-las-tormentas-1989442.html"],
+  esNino:["El Sol","https://www.elsol.com.ar/mendoza/el-nino-en-mendoza-el-senado-aprobo-la-emergencia-pero-el-proyecto-vuelve-a-diputados/"],
+  dmNino:["Diario Mendoza","https://www.diariomendoza.com.ar/politica/con-cambios-aprobaron-emergencia-climatica-mendoza-proyecto-volvio-diputados-n182366"],
+  mt27:["Mendoza Today","https://mendozatoday.com.ar/politica/mendoza-2027-quienes-empiezan-a-posicionarse-en-la-carrera-por-la-gobernacion/"],
+  saAdop:["Sitio Andino","https://www.sitioandino.com.ar/politica/adopcion-mendoza-el-senado-aprobo-cambios-acelerar-los-procesos-n5732250"],
+  myDep:["Minuto Ya","https://www.minutoya.com.ar/2026/10/20/el-senado-aprobo-una-reforma-para-reducir-la-burocracia-que-afecta-a-los-deportistas-mendocinos"],
+  monYPF:["El Monterizo","https://elmonterizo.com/cornejo-viajo-a-neuquen-y-confirmo-el-plazo-para-el-megaproyecto-de-ypf-en-mendoza"],
+  laLH:["Los Andes","https://www.losandes.com.ar/politica/las-heras-fiscalia-estado-pidio-explicaciones-lo-presti-la-licitacion-residuos-y-sugirio-frenarla-n6010992"],
+  saLH:["Sitio Andino","https://www.sitioandino.com.ar/politica/las-heras-el-pj-pidio-informes-la-licitacion-288000-millones-la-recoleccion-residuos-n5732070"],
+  monLH:["El Monterizo","https://elmonterizo.com/un-bloque-de-concejales-freno-la-licitacion-millonaria-de-la-basura-en-las-heras-que-exigen"],
+  unoArb:["Diario UNO","https://www.diariouno.com.ar/sociedad/super-nino-los-municipios-del-gran-mendoza-intensifican-la-gestion-del-arbolado-publico-n1608010"],
+  sa27:["Sitio Andino","https://www.sitioandino.com.ar/politica/elecciones-2027-los-intendentes-que-van-la-reeleccion-los-que-tendran-competencia-interna-y-los-que-no-renuevan-n5732075"]
+};
+
+const NOTES={
+nacionales:[
+ {a:"mk",k:"Mercados · Análisis",h:"El riesgo país tocó 710 puntos y el blue igualó su récord: qué hay detrás",
+  l:"Los bonos argentinos tuvieron su peor arranque en un año antes de rebotar. El dólar subió por tercer día y el Tesoro movió fichas para calmar la cobertura.",
+  b:["El martes fue una rueda de dos caras. A media mañana el riesgo país llegó a 710 puntos básicos, el nivel más alto desde fines de octubre de 2025; al cierre se había recortado a 672, tres puntos por debajo del lunes, y cortó una racha de siete subas seguidas. Según Infobae, aparecieron compradores atraídos por precios bajos y rendimientos altos.",
+     "En el frente cambiario, el mayorista cerró en $1.525, el minorista del Banco Nación en $1.545 y el blue en $1.570, un récord nominal que iguala el de fines de julio. El contado con liquidación también marcó máximos. Dos datos matizan el cuadro: en octubre el mayorista acumula apenas 0,5%, por debajo de la inflación, y el Banco Central compró US$103 millones, con reservas brutas en torno a US$50.200 millones.",
+     "Conviene separar planos. El externo, con tasas del Tesoro estadounidense en alza y tensión en Medio Oriente, explica buena parte del castigo a la deuda emergente. El local tiene que ver con la demanda de cobertura: Finanzas canjeó en forma anticipada US$3.896 millones en bonos atados al dólar antes de la fijación del 27 de octubre. En el debate de fondo, el Gobierno descarta una devaluación y sostiene el ancla cambiaria, mientras economistas como Joaquín Cottani proponen liberar el tipo de cambio aun a costa de más inflación transitoria. Son dos apuestas distintas sobre qué riesgo es mayor."],
+  s:["ibMerc","amb","ahora"]},
+ {a:"bd",k:"Congreso · Bolsillo",h:"Deudas familiares y discapacidad: qué se discute hoy en Diputados",
+  l:"El oficialismo llega a una megasesión con sus propios textos para competir con los de la oposición. La diferencia está en la letra chica.",
+  b:["Si tenés deudas con la tarjeta o con una billetera virtual, esta sesión te interesa. Hay dos miradas. La del oficialismo apunta a educación financiera, a que las tasas se informen de forma más clara, a prevenir el sobreendeudamiento y a poner reglas para los préstamos digitales, pero sin topes a las tasas ni quitas de capital. La de Unión por la Patria, la Coalición Cívica y parte de Provincias Unidas propone una emergencia de 180 días y refinanciar deudas de hasta dos canastas básicas totales, a tasa TAMAR más 25%.",
+     "En discapacidad, el texto oficialista dejó afuera el recorte que eliminaba pensiones no contributivas: mantiene la pensión con su actualización por inflación, el nomenclador de prestaciones y un arancel unificado, y permite cobrarla junto con un trabajo registrado si el sueldo no supera dos salarios mínimos. Las organizaciones del sector dicen que la emergencia vigente no se cumplió y piden extenderla hasta fines de 2027.",
+     "La sesión también incluye la Ley de Tierras, con un límite del 15% para la propiedad extranjera de tierra rural, y una suba del corte obligatorio de biocombustibles. Según Infobae, los bloques provinciales van a definir la votación. Mi consejo: si estás endeudado, no esperes a la ley; pedí en tu banco el detalle del costo financiero total y compará antes de refinanciar."],
+  s:["ibSes"]},
+ {a:"lr",k:"Laburo · Protesta",h:"Retiro voluntario para 20.000 estatales: ATE marcha hoy a Olivos",
+  l:"El Decreto 1203 abre la puerta de salida del Estado durante noviembre. El gremio dice que no es voluntario y sale a la calle.",
+  b:["Che, a ver si se entiende. El Gobierno oficializó el lunes un régimen de retiro voluntario para empleados de la administración nacional. Rige durante noviembre, se puede estirar 30 días y calculan unos 20.000 elegibles. Si lo agarrás, no podés volver a la administración salvo que devuelvas la plata.",
+     "Hay tres modalidades según edad y aportes. Los más jóvenes (mujeres hasta 57 y varones hasta 62) cobran un sueldo bruto por año de antigüedad, con tope de 20, más cuatro o cinco sueldos extra según los años de planta. Los que están cerca de jubilarse tienen opciones como cobrar el 60% del sueldo hasta 36 meses. Sturzenegger dijo que en la gestión Milei se redujeron unos 78.000 puestos entre la administración y las empresas públicas.",
+     "Del otro lado, ATE, con Rodolfo Aguiar a la cabeza, lo llama despido extorsivo: denuncia que a la gente le plantean firmar o quedar en disponibilidad. Hoy miércoles a las 17 marchan a la Quinta de Olivos. Es una banda de laburantes con la decisión de su vida arriba de la mesa, así que posta: si te toca, leé bien la letra chica antes de firmar nada."],
+  s:["lpoRet","ed"]},
+ {a:"mk",k:"Agenda presidencial",h:"Milei, en Madrid: campaña para 2027 con la economía como argumento",
+  l:"El Presidente pasó por la AOG en Neuquén y viajó a España, donde habló ante inversores. Puertas adentro, el debate es cuánto crece de verdad la economía.",
+  b:["Tras encabezar el lunes la Expo Argentina Oil & Gas en Neuquén, Javier Milei viajó a Madrid. En un foro de Nueva Economía Fórum pidió a los inversores mirar a la Argentina y planteó, ya en clave de campaña, que si es reelecto los cuatro años siguientes serán inolvidables. Es su séptimo viaje a España desde fines de 2023; en los anteriores se reunió con Isabel Díaz Ayuso y Santiago Abascal, nunca con el presidente del Gobierno, Pedro Sánchez.",
+     "El mensaje externo es de crecimiento: el Presidente afirmó que el país crece varias veces por encima de su promedio histórico. Puertas adentro la discusión es otra. En el Simposio Internacional de Economía, Ricardo Arriazu señaló que, pese a la cosecha y la producción de hidrocarburos récord y a términos de intercambio favorables, la economía crece menos del 2% cuando debería superar el 5%, según El Destape.",
+     "Hay que leer los dos planos juntos. La diplomacia presidencial busca inversión y alineamiento ideológico; la economía real exige que esa inversión llegue a tiempo para mover la actividad antes de 2027. La brecha entre el discurso y los números de crecimiento es, probablemente, el principal tema de la campaña que ya empezó."],
+  s:["ibMad","ed"]}
+],
+provinciales:[
+ {a:"bd",k:"Agua · Servicios",h:"Cambio en Aysam: se fue Mingorance y asumió Ginés Hernández",
+  l:"La renuncia llega en medio de los desbordes cloacales en Guaymallén y una causa judicial abierta. El nuevo presidente es un hombre de la casa.",
+  b:["El martes a la tarde, Humberto Mingorance presentó su renuncia indeclinable a la presidencia de Aysam, la empresa que nos lleva el agua y se lleva las cloacas en buena parte de Mendoza. Según Diario Mendoza, invocó motivos personales. En su lugar, el Gobierno designó a Ginés Darío Hernández, que era el gerente general.",
+     "¿Por qué importa? Mingorance estaba imputado por los fiscales Gabriel Blanco y Sebastián Capizzi por los vuelcos cloacales en Los Corralitos, Guaymallén, y además tenía una multa de la Oficina de Ética Pública por su declaración jurada. Hernández es licenciado en Economía por la UNCuyo, trabaja en el sector desde el año 2000 y fue gerente de Finanzas de Aysam durante una década.",
+     "El cambio se da justo cuando el intendente Marcos Calvente le reclama a la empresa un plan especial para las tormentas: dice que en la última hubo cinco o seis desbordes casi al mismo tiempo en Dorrego, San José, Villanueva y Corralitos. Si vivís en esas zonas, ante un desborde avisá enseguida a Aysam y a tu municipio, y no dejes que los chicos jueguen cerca del agua."],
+  s:["esAy","dmAy","mdzCal"]},
+ {a:"mk",k:"Legislatura · Finanzas públicas",h:"Emergencia por El Niño: el Senado la aprobó con cambios y vuelve a Diputados",
+  l:"La norma habilita contrataciones rápidas y reasignar partidas por 180 días. El Senado sumó controles y la oposición terminó acompañando.",
+  b:["El Senado provincial aprobó por unanimidad la emergencia por riesgo hidrometeorológico y climático vinculada a El Niño. Como modificó el texto, el proyecto vuelve a Diputados, que puede aceptar los cambios o insistir con su versión original.",
+     "Lo relevante, en términos fiscales, son las herramientas: agilizar contrataciones, ejecutar obras hidráulicas y de drenaje, intervenir cauces, mantener caminos y reasignar partidas del presupuesto, durante 180 días prorrogables por otros 180. El Senado eliminó el artículo 9, recortó el 8 y habilitó que los puntos críticos se identifiquen con informes de Irrigación. Se sumaron informes trimestrales a ambas cámaras, y el Ministerio de Gobierno tendrá diez días hábiles para reglamentar.",
+     "En el plano político, el peronismo, a través de la senadora Adriana Cano, puso el acento en los controles y en respetar las competencias de cada organismo, y terminó votando a favor tras los cambios. La lógica institucional es conocida: una emergencia acelera la gestión, pero también reduce los filtros habituales del gasto. Por eso los informes trimestrales serán la medida real de cuánto y en qué se usaron estas facultades."],
+  s:["esNino","dmNino"]},
+ {a:"lr",k:"Rosca 2027",h:"Gobernación 2027: el oficialismo testea nombres con una encuesta tipo boleta",
+  l:"Mema, Ulpiano, García Zalazar y Lombardi en la vidriera radical; Petri no se baja y el PJ mira a Stevanato y Destéfanis.",
+  b:["Bancame un toque con la rosca. Según Mendoza Today, en Cambia Mendoza se mencionan Natalio Mema, Ulpiano Suárez, Tadeo García Zalazar y Andrés Lombardi, que igual se muestra cauto. Y el oficialismo encargó una encuesta que presenta los nombres como si fueran una boleta, para medir cómo reacciona la gente. Los resultados se esperan en los próximos días.",
+     "En La Libertad Avanza, Luis Petri no tiene pensado bajarse de la pelea por Mendoza. Su paso por el congreso de la juventud libertaria y un repost de Milei en X se leyeron como señales de que tiene peso propio. Traducido: la negociación con Cornejo dentro de la alianza va a estar picante.",
+     "En el peronismo suenan Matías Stevanato, intendente de Maipú, y Florencia Destéfanis, intendenta de Santa Rosa, y todavía no está claro si habrá consenso o interna. El Partido Verde empuja a Emanuel Fugazzotto, de 34 años. Ojo: el propio medio aclara que nada de esto está confirmado; son nombres en conversación, no candidaturas."],
+  s:["mt27"]}
+],
+provBriefs:[
+ ["Adopción: el Senado dio media sanción unánime a una reforma para agilizar las guardas con fines adoptivos de chicos con adoptabilidad firme. No habilita entregas directas.","saAdop"],
+ ["El Senado aprobó, también en media sanción, eliminar el Documento de Identidad Deportiva y simplificar la licencia especial para deportistas federados.","myDep"],
+ ["Vaca Muerta mendocina: Provincia e YPF se dieron tres meses para presentar al RIGI el proyecto de US$4.500 millones; hay cinco pozos exploratorios en perforación.","monYPF"]
+],
+municipales:[
+ {a:"mk",k:"Las Heras · Finanzas",h:"Basura por $288.000 millones a ocho años: Fiscalía de Estado pide explicaciones",
+  l:"La licitación de recolección de residuos de Las Heras equivale, según el PJ, a unos dos presupuestos municipales. Las ofertas se abren el viernes 23.",
+  b:["Fiscalía de Estado emitió el dictamen 813/26 sobre la Licitación Pública 1061 de Las Heras: pidió la ordenanza presupuestaria, el expediente completo, un informe de Contaduría sobre la reserva de $285.000 millones y una justificación técnica del plazo de 96 meses. Además sugirió al fiscal Fernando Simón evaluar una suspensión temporal, aunque aclaró que no frenó el proceso ni opinó sobre su legalidad.",
+     "Los números explican la tensión. El presupuesto oficial es de $288.000 millones por un contrato hasta 2034, con actualización trimestral de precios. El concejal peronista Raúl Ceverino estima que el presupuesto anual del municipio ronda los $150.000 millones, y la senadora Adriana Cano advirtió que el contrato compromete a esta gestión y a las dos siguientes. Los concejales Mabel Iannizzotto y Ceverino pidieron informes y garantías de cobertura en zonas como El Algarrobal y El Plumerillo.",
+     "El intendente Francisco Lo Presti defendió la contratación: dijo que el presupuesto se calculó con los costos actuales, que hoy se pagan cerca de $2.800 millones mensuales a la concesionaria Vitsa y que las modificaciones contractuales de la gestión anterior impedían otra prórroga. Esa cifra mensual, proyectada a ocho años, ayuda a dimensionar el monto. El punto institucional pendiente es si el Ejecutivo necesitaba aval del Concejo para comprometer ocho ejercicios."],
+  s:["laLH","saLH","monLH"]},
+ {a:"bd",k:"Gran Mendoza · Arbolado",h:"Antes de las tormentas, los municipios salen a sacar árboles en riesgo",
+  l:"Con El Niño en el horizonte, cada departamento acelera podas y extracciones. Te contamos cómo viene tu barrio.",
+  b:["Los árboles son el orgullo de Mendoza, pero uno enfermo con viento fuerte es un peligro. Por eso los municipios del Gran Mendoza aceleraron el trabajo. En Guaymallén relevaron 160.000 árboles, encontraron 8.500 en riesgo y están sacando 500 que estaban por caerse. En Las Heras hay más de 750 en mal estado y retiran unos 30 por semana.",
+     "En Ciudad, el plan forestal cuenta 70.000 ejemplares y prevé retirar más de 140 secos, 50 de ellos de organismos provinciales. Luján tiene más de 100.000 árboles urbanos y poda con un agrónomo presente. Godoy Cruz, con más de 90.000, plantó 100 nuevos en el Parque Benegas. Y Maipú, que declaró la emergencia fitosanitaria tras la muerte de una vecina en 2025, ya hizo más de 2.700 intervenciones.",
+     "Un dato que conviene saber: con la nueva ley provincial, por cada árbol que se saca hay que plantar al menos tres, y sacar uno sin permiso puede costar una multa de hasta $9 millones por ejemplar. Si ves un árbol inclinado o seco en tu vereda, no lo toques: avisá a tu municipio."],
+  s:["unoArb"]},
+ {a:"lr",k:"Intendencias 2027",h:"Maipú, Las Heras y el Este: el otro mapa de quién va por la reelección",
+  l:"Sitio Andino repasó los 18 departamentos. Todo depende del desdoblamiento y de lo que haga Petri.",
+  b:["Literal, la rosca no se toma vacaciones. Según Sitio Andino, en Maipú Matías Stevanato no puede renovar y como sucesores suenan Emiliano Sallei y Juan Pablo Yapura; del lado de Cambia Mendoza aparecen Mauricio Pinti Clop, Gabriel López, Fernanda Sabadin y Mercedes Rus.",
+     "En Las Heras, Francisco Lo Presti confirmó que va por la reelección y el oficialismo quiere evitar internas; en el PJ, Adriana Cano es la que más respaldo junta. En Luján, Esteban Allasino iría por otro mandato, aunque no está cerrado. En el Este hay recambio fuerte: en San Martín no sigue Raúl Rufeil y el cornejismo empuja a Marité Baduí; en Rivadavia, Ricardo Mansur no buscará renovar; en Santa Rosa y La Paz los intendentes no pueden repetir.",
+     "El dato clave del medio: casi todo está en negociación y depende del desdoblamiento electoral y del rol de Luis Petri. Así que tomalo como lo que es, un mapa de nombres que suenan, no listas confirmadas."],
+  s:["sa27"]}
+],
+munBriefs:[
+ ["Guaymallén: Calvente defendió la quita de adicionales de octubre a los municipales y dijo que aún no pidió adelanto de coparticipación, aunque lo hará si hace falta.","mdzCal"],
+ ["Guaymallén: un informe pericial atribuyó a causas fortuitas el incendio del data center municipal, según dijo el intendente.","mdzCal"],
+ ["Las Heras: los concejales del PJ reclaman que la licitación de residuos garantice cobertura en El Algarrobal y El Plumerillo; la apertura de sobres es el 23 de octubre.","monLH"]
+]
+};
+
+function esc(t){return t.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function srcHTML(keys){return 'Fuentes: '+keys.map(k=>`<a href="${S[k][1]}" target="_blank" rel="noopener">${S[k][0]}</a>`).join(" · ")}
+function card(n,big){
+  const A=AUTH[n.a];
+  return `<article class="${big?'big':''}" data-a="${n.a}">
+    <p class="kick">${esc(n.k)}</p>
+    <h3>${esc(n.h)}</h3>
+    <div class="by"><div class="av">${A.i}</div><div class="who">${A.n}<span>${A.t}</span></div></div>
+    <p class="lede">${esc(n.l)}</p>
+    <details${big?' open':''}><summary>Leer nota completa</summary>
+      <div class="body">${n.b.map(p=>`<p>${esc(p)}</p>`).join("")}<div class="src">${srcHTML(n.s)}</div></div>
+    </details>
+  </article>`;
+}
+function briefs(list){
+  return `<div class="briefs"><h4>Breves</h4><ul>${list.map(([t,k])=>`<li>${esc(t)} <a href="${S[k][1]}" target="_blank" rel="noopener">${S[k][0]}</a></li>`).join("")}</ul></div>`;
+}
+function render(f){
+  ["nacionales","provinciales","municipales"].forEach(sec=>{
+    const list=NOTES[sec].filter(n=>f==="all"||n.a===f);
+    const g=document.querySelector(`[data-grid="${sec}"]`);
+    let h="";
+    if(!list.length){h=`<p class="empty">Esta periodista no firma notas en esta sección hoy.</p>`.replace("Esta periodista",f==="bd"?"Bárbara":f==="mk"?"Augusto":"Lautaro")}
+    else{
+      h+=`<div class="lead">${card(list[0],true)}</div>`;
+      const side=list.slice(1,3), rest=list.slice(3);
+      if(side.length) h+=`<div class="side">${side.map(n=>card(n,false)).join("")}</div>`;
+      else h=h.replace('class="lead"','class="lead" style="grid-column:span 12"');
+      if(rest.length) h+=`<div class="rest">${rest.map(n=>card(n,false)).join("")}</div>`;
+    }
+    if(f==="all"){
+      if(sec==="provinciales") h+=briefs(NOTES.provBriefs);
+      if(sec==="municipales") h+=briefs(NOTES.munBriefs);
+    }
+    g.innerHTML=h;
+  });
+}
+document.querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed","false"));
+  b.setAttribute("aria-pressed","true");
+  render(b.dataset.f);
+  try{localStorage.setItem("frn-f",b.dataset.f)}catch(e){}
+}));
+let start="all";try{start=localStorage.getItem("frn-f")||"all"}catch(e){}
+const sb=document.querySelector(`.chip[data-f="${start}"]`);
+if(sb&&start!=="all"){document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed","false"));sb.setAttribute("aria-pressed","true")}
+render(start);
+
+/* Sección activa en la nav */
+const links=[...document.querySelectorAll("nav.sections a")];
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.toggle("on",l.dataset.sec===e.target.id))}})},{rootMargin:"-40% 0px -55% 0px"});
+document.querySelectorAll("section.sec").forEach(s=>io.observe(s));
+if(location.hash){const t=document.querySelector(location.hash);if(t)setTimeout(()=>t.scrollIntoView(),50)}
+</script>
+
+</body></html>
